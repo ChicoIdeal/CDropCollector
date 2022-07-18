@@ -1,0 +1,118 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '7.0.0'
+}
+
+apply plugin: 'java'
+apply plugin: 'com.github.johnrengelman.shadow'
+
+group = 'dev.crius'
+version = '1.0'
+
+def pluginDescription = 'DropCollector plugin made by Crius Development.'
+def pluginName = 'CDropCollector'
+def web = 'https://crius.dev'
+
+repositories {
+    mavenCentral()
+    maven { url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
+    maven { url "https://repo.codemc.io/repository/maven-public/" }
+    maven { url 'https://jitpack.io' }
+    maven { url 'https://repo.triumphteam.dev/snapshots/' }
+    maven { url 'https://repo.codemc.org/repository/maven-public/' }
+    maven { url 'https://repo.bg-software.com/repository/api/' }
+    maven { url 'https://repo.glaremasters.me/repository/bloodshot' }
+    maven { url 'https://repo.rosewooddev.io/repository/public/' }
+}
+
+dependencies {
+    compileOnly 'org.spigotmc:spigot-api:1.19-R0.1-SNAPSHOT'
+
+    compileOnly 'org.projectlombok:lombok:1.18.24'
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+
+    // hologram plugins
+    compileOnly 'com.gmail.filoghost.holographicdisplays:holographicdisplays-api:2.4.9'
+    compileOnly 'com.github.decentsoftware-eu:decentholograms:2.5.1'
+    compileOnly 'com.github.sainttx.Holograms:holograms-api:-SNAPSHOT'
+
+    // economy plugins
+    compileOnly 'org.black_ixx:playerpoints:3.2.4'
+    compileOnly "com.github.MilkBowl:VaultAPI:1.7"
+
+    // shop plugins
+    compileOnly "com.github.brcdev-minecraft:shopgui-api:2.4.0"
+    compileOnly 'com.github.Gypopo:EconomyShopGUI-API:1.1.0'
+    compileOnly 'com.github.SirLeezus:OneStopShop:-SNAPSHOT'
+
+    // region check plugins such as ASkyBlock
+    compileOnly 'com.wasteofplastic:askyblock:3.0.9.4'
+    compileOnly 'com.bgsoftware:SuperiorSkyblockAPI:1.11.0'
+    compileOnly 'com.griefdefender:api:2.1.0-SNAPSHOT'
+    compileOnly 'com.github.TechFortress:GriefPrevention:16.17.1'
+
+    // stacker plugins
+    compileOnly 'com.bgsoftware:WildStackerAPI:3.8.0'
+    compileOnly 'dev.rosewood:rosestacker:1.4.12'
+
+    implementation "net.kyori:adventure-api:4.11.0"
+    implementation "net.kyori:adventure-platform-bukkit:4.1.1"
+    implementation "net.kyori:adventure-text-minimessage:4.11.0"
+    implementation "dev.triumphteam:triumph-cmd-bukkit:2.0.0-SNAPSHOT"
+    implementation ("dev.triumphteam:triumph-gui:3.1.2") { exclude group: "com.google.code.gson" }
+    implementation 'com.zaxxer:HikariCP:4.0.3'
+    implementation 'de.tr7zw:item-nbt-api:2.10.0'
+    implementation 'org.mongodb:mongodb-driver-sync:4.6.1'
+    implementation 'org.bstats:bstats-bukkit:3.0.0'
+
+    // other libs
+    compileOnly fileTree("libs")
+}
+
+java {
+    def javaVersion = JavaVersion.VERSION_1_8
+    sourceCompatibility = javaVersion
+    targetCompatibility = javaVersion
+    if (JavaVersion.current() < javaVersion) {
+        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
+    }
+}
+
+processResources {
+    def props = [
+            version: version,
+            description: pluginDescription,
+            website: web,
+            name: pluginName
+    ]
+    inputs.properties props
+    filteringCharset 'UTF-8'
+    filesMatching('plugin.yml') {
+        expand props
+    }
+}
+
+
+shadowJar {
+    dependsOn(jar)
+
+    archiveFileName = "${archiveBaseName.get()} v${archiveVersion.get()}.jar"
+
+    relocate 'com.zaxxer', 'dev.crius.dropcollector.thirdparty.com.zaxxer'
+    relocate 'org.slf4j', 'dev.crius.dropcollector.thirdparty.org.slf4j'
+    relocate 'net.kyori', 'dev.crius.dropcollector.thirdparty.net.kyori'
+    relocate 'dev.triumphteam', 'dev.crius.dropcollector.thirdparty.dev.triumphteam'
+    relocate 'de.tr7zw.changeme', 'dev.crius.dropcollector.thirdparty.de.tr7zw'
+    relocate 'de.tr7zw.annotations', 'dev.crius.dropcollector.thirdparty.de.tr7zw.annotations'
+    relocate 'com.mongodb', 'dev.crius.dropcollector.thirdparty.com.mongodb'
+    relocate 'org.bson', 'dev.crius.dropcollector.thirdparty.org.bson'
+    relocate 'org.bstats', 'dev.crius.dropcollector.thirdparty.org.bstats'
+
+    from sourceSets.getByName("main").output
+    configurations = [project.configurations.getByName("runtimeClasspath")]
+
+}
+
+build {
+    dependsOn shadowJar
+}

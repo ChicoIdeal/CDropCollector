@@ -1,0 +1,250 @@
+Settings:
+  collect-player-drops: true
+  only-the-owner-can-place: true
+  required-balance-to-place: 350 # set to -1 to disable
+  allow-coops-to-manage: true
+  tax: 15 # 15% of total price goes to server. Set to 0 to disable.
+  auto-sell: true # sells all the items in the storage whenever it is full
+
+  database:
+    # available types: YAML, MYSQL, MONGO
+    type: YAML
+    connection-string: "mongodb+srv://username:password@host/?retryWrites=true&w=majority"
+    host: "localhost"
+    port: 3306
+    database: "database"
+    username: "username"
+    password: "password"
+    table: "crius_dropcollector_data"
+    useSSL: false
+
+  # case sensitive!
+  enabled-worlds: # The collector can only be placed in these worlds, and it won't collect the items in disabled worlds.
+    - "world"
+
+Hooks:
+  # The plugin will try to hook automatically and then check for preferred plugin.
+  # If the preferred hook not found, the hook which found by the plugin will be used.
+  preferredShopPlugin:
+    enabled: true # if false, we won't hook to any plugin.
+    name: "ShopGUIPlus"
+  preferredEconomyPlugin:
+    enabled: true
+    name: "Vault"
+  preferredRegionPlugin:
+    enabled: true
+    name: "SuperiorSkyblock2"
+  preferredHologramPlugin:
+    enabled: true
+    name: "DecentHolograms"
+  preferredStackerPlugin:
+    enabled: true
+    name: "RoseStacker"
+
+Upgrades:
+  # the first upgrade will be the default level, so price and displayName is never used.
+  1:
+    displayName: "<gold>Upgrade - Level 1"
+    max: 300
+    price: 0
+  2:
+    displayName: "<gold>Upgrade - Level 2"
+    max: 500
+    price: 150
+  3:
+    displayName: "<gold>Upgrade - Level 3"
+    max: 750
+    price: 500
+  4:
+    displayName: "<gold>Upgrade - Level 4"
+    max: 1000
+    price: 750
+  5:
+    displayName: "<gold>Upgrade - Level 5"
+    max: 1250
+    price: 1000
+
+Messages:
+
+  prefix: "<dark_aqua>Collector <dark_gray>»"
+
+  # Since holograms does not support components, you will need to use legacy format. Unfortunately.
+  hologram-lines:
+    - "&6&l<display-name>"
+    - ""
+    - "&7&oRight Click to open the menu"
+    - "&7&oShift + Left Click to destroy"
+
+  gave-a-creator: "<prefix> <green>Successfully gave a collector creator to <target> with type of <entity-displayname>"
+  got-a-creator: "<prefix> <green>You just got a new collector creator with type of <entity-displayname>"
+
+  placed-a-collector: "<prefix> <green>Successfully placed a new collector. <gray>Right Click to manage."
+
+  not-the-owner-of-creator: "<prefix> <red>Only the owner of this creator can place it."
+  cannot-create-in-this-region: "<prefix> <red>You can not create a collector here."
+  cannot-create-already-exists: "<prefix> <red>This region already has a creator with the same type. Cannot create again."
+  cannot-create-not-enough-balance: "<prefix> <red>You don't have enough money to place a collector. <yellow>Required: $<required>"
+  cannot-create-world: "<prefix> <red>You can not create a collector in this world!"
+
+  sold-all: "<prefix> <green>Successfully sold all the items in the storage for <gold>$<price>"
+
+  sold-all-auto: "<prefix> <green>We sold all the items in the storage automatically. <gold>+$<price>"
+  disabled-auto-sell: "<prefix> <red>Auto sell disabled."
+  enabled-auto-sell: "<prefix> <green>Auto sell enabled."
+
+  enabled: "<prefix> <green>Successfully enabled the collector."
+  disabled: "<prefix> <green>Successfully disabled the collector."
+
+  inventory-full: "<prefix> <red>Your inventory is full!"
+
+  took: "<prefix> <green>Successfully took <yellow><amount>x <item> <green>from the storage of collector."
+  sold: "<prefix> <green>Successfully sold <yellow><amount>x <item> <green>for <yellow>$<price>."
+
+  breaking: "<prefix> <gray>Break mode is enabled. If you don't want to break this collector, please wait 3 seconds before hitting again."
+
+  limit-reached: "<prefix> <red>You reached the limit, you can not upgrade your collector anymore."
+
+  upgraded: "<prefix> <green>Successfully upgraded the collector. New limit: <limit>"
+
+  cannot-upgrade-not-enough-balance: "<prefix> <red>You don't have enough money to upgrade your collector. Required: <gold>$<price>"
+
+  reloaded: "<prefix> <green>Successfully reloaded the plugin. <gray>Some things may require restart."
+
+  help:
+    - "  <gold><bold>CDropCollector Help</bold>"
+    - ""
+    - " <dark_purple>To give a collector creator:"
+    - "   <light_purple>/dropcollector give <entity> <player>"
+    - " <dark_purple>To reload the plugin:"
+    - "   <light_purple>/dropcollector reload"
+    - ""
+    - "<yellow>Plugin version: <version>"
+
+  no-permission: "<prefix> <red>You do not have permission to run this command."
+  too-many-arguments: "<prefix> <red>Too many arguments."
+  not-enough-arguments: "<prefix> <red>Not enough arguments."
+  unknown-command: "<prefix> <red>Unknown command."
+  invalid-argument: "<prefix> <red>Invalid argument."
+
+# Available placeholders:
+# <type-displayname> for displayName and lore.
+Creator-Item:
+  glow: true
+  displayName: "<dark_gray>▓ <gold><entity-displayname> <dark_gray>▓"
+  lore:
+    - ""
+    - "<gray>Right Click to place this creator."
+
+Gui:
+  rows: 5
+  title: "<entity-displayname>"
+  fillerMaterial: "GRAY_STAINED_GLASS_PANE"
+  fillerSlots: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 26, 27, 35, 38, 42, 43 ]
+  pageSize: 21
+
+  items:
+
+    previous:
+      slot: 39
+      material: "ARROW"
+      displayName: "<yellow>Previous Page"
+      lore:
+        - "<gray>Click to return to the previous page"
+
+    next:
+      slot: 41
+      material: "ARROW"
+      displayName: "<yellow>Next Page"
+      lore:
+        - "<gray>Click to go to the next page"
+
+    sell_all:
+      slot: 40
+      material: "GOLD_INGOT"
+      displayName: "<yellow>Sell All Items"
+      lore:
+        - "<gray>Click to sell all the collected items"
+        - "<gray><italic>Server will take 15% of the total price."
+
+    upgrade:
+      slot: 36
+      material: "FIREWORK_ROCKET"
+      displayName: "<yellow>Upgrade"
+      lore:
+        - "<gray>Click to upgrade this collector's limit"
+
+    info:
+      slot: 37
+      material: "BOOK"
+      displayName: "<yellow>Information"
+      lore:
+        - "<gray>Stock information:"
+        - ""
+        - "<gray>There are <yellow><current><gray>/<dark_red><max> <gray>items in total."
+        - "<gray>Upgrade your collector to get more space!"
+
+    status-enabled:
+      slot: 44
+      material: "LIME_DYE"
+      displayName: "<green>Collector is enabled."
+      lore:
+        - "<gray>This collector is now collecting the drops."
+        - "<gray>Click to disable."
+
+    status-disabled:
+      slot: 44
+      material: "GRAY_DYE"
+      displayName: "<gray>Collector is disabled."
+      lore:
+        - "<gray>Click to enable."
+
+    auto-sell-enabled:
+      slot: 43
+      material: "GLOWSTONE_DUST"
+      displayName: "<green>Auto Sell is enabled."
+      lore:
+        - "<gray>When the collector is full, we will sell the items automatically."
+        - "<gray>Click to disable."
+
+    auto-sell-disabled:
+      slot: 43
+      material: "GUNPOWDER"
+      displayName: "<gray>Auto Sell is disabled."
+      lore:
+        - "<gray>Click to enable."
+
+    drop:
+      lore:
+        - ""
+        - "<gray>Left Click to get this stack to your inventory."
+        - "<gray>Right Click to sell this stack."
+        - "<gray><italic>Server will take 15% of the total price."
+        - ""
+        - "<gray><italic>Note: You can sell all the stored items with Sell All button."
+
+Upgrade-Gui:
+  rows: 3
+  title: "Confirm"
+  items:
+    upgrade:
+      slot: 13
+      material: "FIREWORK_ROCKET"
+      displayName: "<upgrade-displayname>"
+      lore:
+        - "<gray>Current limit: <yellow><limit>"
+        - "<gray>Upgraded limit: <yellow><upgraded-limit>"
+        - "<gray>Price: <yellow>$<price>"
+        - ""
+        - "<gray>Click to upgrade!"
+
+# in CDropCollector, every Collector has its own entity.
+# Entities specify the materials that collector can collect. And other values such as displayName and head.
+Entities:
+  zombie:
+    displayName: "Zombie Drop Collector"
+    materials:
+      # the format is:
+      # MATERIAL: PRICE
+      ROTTEN_FLESH: 10.0
+      CARROT: 20.0
+    head: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjZmMTViOWNkYWE4MzQyZWY0ZDlkNjRkNzc2NzlhNTkyYTIwYzVlMTNlMTg3NTVhN2E0M2EzNTI2NzdmZDA3MSJ9fX0="

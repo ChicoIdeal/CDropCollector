@@ -1,0 +1,28 @@
+name: '${name}'
+version: '${version}'
+main: dev.crius.dropcollector.DropCollectorPlugin
+api-version: 1.13
+softdepend:
+  - Vault
+  - PlayerPoints
+  - ASkyBlock
+  - FabledSkyBlock
+  - SuperiorSkyblock2
+  - BentoBox
+  - GriefPrevention
+  - GriefDefender
+  - UltimateClaims
+  - EconomyShopGUI
+  - EconomyShopGUI-Premium
+  - ShopGUIPlus
+  - OneStopShop
+  - GUIShop
+  - HolographicDisplays
+  - DecentHolograms
+  - RoseStacker
+  - UltimateStacker
+  - WildStacker
+  - zItemStacker
+authors: [ CriusDevelopment, hyperion ]
+description: '${description}'
+website: '${website}'

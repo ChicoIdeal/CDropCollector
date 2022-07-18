@@ -1,0 +1,4 @@
+rootProject.name = 'CDropCollector'
+include 'v1_8_R3'
+include 'API'
+

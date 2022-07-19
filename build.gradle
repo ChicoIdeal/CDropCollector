@@ -22,6 +22,7 @@ repositories {
     maven { url 'https://repo.bg-software.com/repository/api/' }
     maven { url 'https://repo.glaremasters.me/repository/bloodshot' }
     maven { url 'https://repo.rosewooddev.io/repository/public/' }
+    maven { url 'https://repo.songoda.com/repository/public/' }
 }
 
 dependencies {
@@ -49,10 +50,12 @@ dependencies {
     compileOnly 'com.bgsoftware:SuperiorSkyblockAPI:1.11.0'
     compileOnly 'com.griefdefender:api:2.1.0-SNAPSHOT'
     compileOnly 'com.github.TechFortress:GriefPrevention:16.17.1'
+    compileOnly 'com.songoda:skyblock:2.3.30'
 
     // stacker plugins
     compileOnly 'com.bgsoftware:WildStackerAPI:3.8.0'
     compileOnly 'dev.rosewood:rosestacker:1.4.12'
+    compileOnly 'com.songoda:UltimateStacker:2.1.8'
 
     implementation "net.kyori:adventure-api:4.11.0"
     implementation "net.kyori:adventure-platform-bukkit:4.1.1"

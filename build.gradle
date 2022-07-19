@@ -19,7 +19,6 @@ repositories {
     maven { url "https://repo.codemc.io/repository/maven-public/" }
     maven { url 'https://jitpack.io' }
     maven { url 'https://repo.triumphteam.dev/snapshots/' }
-    maven { url 'https://repo.codemc.org/repository/maven-public/' }
     maven { url 'https://repo.bg-software.com/repository/api/' }
     maven { url 'https://repo.glaremasters.me/repository/bloodshot' }
     maven { url 'https://repo.rosewooddev.io/repository/public/' }

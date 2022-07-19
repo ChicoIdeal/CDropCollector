@@ -38,7 +38,7 @@ public class YamlDatabase implements Database {
     }
 
     @Override
-    public void onDisable() {
+    public void saveAll() {
         plugin.debug("Saving collectors...");
         for (Collector collector : plugin.getCollectorManager().getCollectors()) {
             saveCollector(collector);

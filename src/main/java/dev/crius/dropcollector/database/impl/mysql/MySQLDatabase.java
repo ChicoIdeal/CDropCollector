@@ -73,7 +73,7 @@ public class MySQLDatabase implements Database {
     }
 
     @Override
-    public void onDisable() {
+    public void saveAll() {
         plugin.debug("Saving collectors...");
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement("REPLACE INTO `" + table

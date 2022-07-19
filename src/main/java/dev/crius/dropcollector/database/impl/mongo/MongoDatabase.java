@@ -62,7 +62,7 @@ public class MongoDatabase implements Database {
     }
 
     @Override
-    public void onDisable() {
+    public void saveAll() {
         for (CollectorModel model : plugin.getCollectorManager().getCollectors().stream()
                 .map(Collector::toModel).collect(Collectors.toList())) {
             collection.replaceOne(Filters.eq("_id", model.id), model);

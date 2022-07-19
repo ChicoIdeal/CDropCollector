@@ -28,6 +28,7 @@ import dev.crius.dropcollector.shop.ShopManager;
 import dev.crius.dropcollector.shop.impl.*;
 import dev.crius.dropcollector.stacker.StackerManager;
 import dev.crius.dropcollector.stacker.impl.*;
+import dev.crius.dropcollector.task.AutoSaveTask;
 import dev.crius.dropcollector.upgrade.UpgradeManager;
 import dev.crius.dropcollector.util.ChatUtils;
 import dev.triumphteam.cmd.bukkit.BukkitCommandManager;
@@ -104,6 +105,8 @@ public final class DropCollectorPlugin extends JavaPlugin {
 
         setupMetrics();
 
+        setupTasks();
+
     }
 
     @Override
@@ -114,7 +117,7 @@ public final class DropCollectorPlugin extends JavaPlugin {
         }
 
         if (this.pluginDatabase != null)
-            this.pluginDatabase.onDisable();
+            this.pluginDatabase.saveAll();
 
         this.hologramManager.removeAll();
 
@@ -176,6 +179,11 @@ public final class DropCollectorPlugin extends JavaPlugin {
     public void setupMetrics() {
         Metrics metrics = new Metrics(this, 15820);
         metrics.addCustomChart(new SingleLineChart("collectors", () -> collectorManager.getCollectors().size()));
+    }
+
+    public void setupTasks() {
+        // save all collectors every 15 minute so even if the server crash we won't lose all the data
+        new AutoSaveTask(this).runTaskTimerAsynchronously(this, 18_000, 18_000);
     }
 
     public void setupConfig() {

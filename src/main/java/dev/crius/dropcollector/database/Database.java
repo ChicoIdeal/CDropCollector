@@ -10,7 +10,7 @@ public interface Database {
 
     void onEnable();
 
-    void onDisable();
+    void saveAll();
 
     void saveCollector(Collector collector);
 

@@ -3,7 +3,6 @@ WIP, not guaranteed to work for now.
 
 # Contributing
 To build and contribute this project, you will need to create a directory called "libs" and add some plugin jars into it.
-- BentoBox
 - UltimateClaims
 - zItemStacker
 

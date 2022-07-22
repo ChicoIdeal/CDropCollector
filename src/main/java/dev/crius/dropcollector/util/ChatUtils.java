@@ -2,6 +2,7 @@ package dev.crius.dropcollector.util;
 
 import dev.crius.dropcollector.DropCollectorPlugin;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.md_5.bungee.api.ChatColor;
@@ -16,7 +17,8 @@ import java.util.stream.Collectors;
 public class ChatUtils {
 
     private final static Pattern HEX_PATTERN = Pattern.compile("#[a-fA-F0-9]{6}");
-    private final static MiniMessage MINI_MESSAGE = MiniMessage.miniMessage();
+    private final static MiniMessage MINI_MESSAGE = MiniMessage.builder()
+            .postProcessor(component -> component.decoration(TextDecoration.ITALIC, false)).build();
     public static final DecimalFormat FORMATTER = (DecimalFormat) NumberFormat.getNumberInstance();
 
     static {

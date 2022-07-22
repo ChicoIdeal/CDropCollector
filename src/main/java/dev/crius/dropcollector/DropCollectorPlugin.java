@@ -20,6 +20,8 @@ import dev.crius.dropcollector.hologram.HologramManager;
 import dev.crius.dropcollector.hologram.impl.DecentHologramsManager;
 import dev.crius.dropcollector.hologram.impl.EmptyHologramManager;
 import dev.crius.dropcollector.hologram.impl.HolographicDisplaysManager;
+import dev.crius.dropcollector.listener.CropListener;
+import dev.crius.dropcollector.listener.EntityListener;
 import dev.crius.dropcollector.listener.InteractListener;
 import dev.crius.dropcollector.listener.ItemListener;
 import dev.crius.dropcollector.region.RegionManager;
@@ -116,8 +118,11 @@ public final class DropCollectorPlugin extends JavaPlugin {
             this.adventure = null;
         }
 
-        if (this.pluginDatabase != null)
+        if (this.pluginDatabase != null) {
+            log("Saving collectors...");
             this.pluginDatabase.saveAll();
+            log("Collectors saved.");
+        }
 
         this.hologramManager.removeAll();
 
@@ -230,6 +235,8 @@ public final class DropCollectorPlugin extends JavaPlugin {
 
         pluginManager.registerEvents(new InteractListener(this), this);
         pluginManager.registerEvents(new ItemListener(this), this);
+        pluginManager.registerEvents(new CropListener(this), this);
+        pluginManager.registerEvents(new EntityListener(this), this);
     }
 
     public void setupUpgradeManager() {
@@ -452,7 +459,9 @@ public final class DropCollectorPlugin extends JavaPlugin {
                 break;
         }
 
+        log("Loading collectors...");
         pluginDatabase.onEnable();
+        log("Collectors loaded.");
     }
 
 }

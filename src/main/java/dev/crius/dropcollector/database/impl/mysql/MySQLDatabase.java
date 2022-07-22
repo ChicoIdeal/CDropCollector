@@ -74,7 +74,6 @@ public class MySQLDatabase implements Database {
 
     @Override
     public void saveAll() {
-        plugin.debug("Saving collectors...");
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement("REPLACE INTO `" + table
                      + "` (uuid, owner, location, `level`, enabled, entity, autoSell, collected)" +
@@ -105,8 +104,6 @@ public class MySQLDatabase implements Database {
         } catch (SQLException exception) {
             plugin.log("An exception was found in database!", exception);
         }
-
-        plugin.debug("Saved collectors.");
     }
 
     @Override

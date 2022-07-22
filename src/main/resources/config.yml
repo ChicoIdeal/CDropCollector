@@ -4,7 +4,28 @@ Settings:
   required-balance-to-place: 350 # set to -1 to disable
   allow-coops-to-manage: true
   tax: 15 # 15% of total price goes to server. Set to 0 to disable.
+
   auto-sell: true # sells all the items in the storage whenever it is full
+
+  # currently only for +1.13
+  auto-harvest: true # harvests fully grown crops
+  auto-harvest-require-collector: true # should we check for collectors in the region? If you are having performance issues, disable this.
+  # Material names can be found in:
+  # https://javadoc.io/static/com.github.cryptomorin/XSeries/7.6.1/com/cryptomorin/xseries/XMaterial.html
+  auto-harvest-crops:
+    - CACTUS
+    - WHEAT
+    - CARROTS
+
+  auto-kill: true # kills all the mobs
+  auto-kill-require-collector: true # should we check for collectors in the region? If you are having performance issues, disable this.
+  # Entity names can be found in:
+  # https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/entity/EntityType.html
+  auto-kill-mobs:
+    - ZOMBIE
+    - SKELETON
+    - BLAZE
+    - IRON_GOLEM
 
   database:
     # available types: YAML, MYSQL, MONGO
@@ -36,7 +57,7 @@ Hooks:
     name: "SuperiorSkyblock2"
   preferredHologramPlugin:
     enabled: true
-    name: "DecentHolograms"
+    name: "HolographicDisplays"
   preferredStackerPlugin:
     enabled: true
     name: "RoseStacker"
@@ -240,11 +261,20 @@ Upgrade-Gui:
 # in CDropCollector, every Collector has its own entity.
 # Entities specify the materials that collector can collect. And other values such as displayName and head.
 Entities:
-  zombie:
-    displayName: "Zombie Drop Collector"
+  # Material names can be found in:
+  # https://javadoc.io/static/com.github.cryptomorin/XSeries/7.6.1/com/cryptomorin/xseries/XMaterial.html
+  crop:
+    displayName: "Crop Collector"
     materials:
       # the format is:
       # MATERIAL: PRICE
-      ROTTEN_FLESH: 10.0
+      CACTUS: 10.0
       CARROT: 20.0
+      WHEAT: 15.0
+    head: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDQ5YzRjN2VlODc2MjFmNTYzOWVjNTc4ZWJhYzgyMmYyZDAxNTVmMmM4NjM4ZjIzMmM4NWE5OTIxNGNmOWViZSJ9fX0="
+  drop:
+    displayName: "Drop Collector"
+    materials:
+      ROTTEN_FLESH: 10.0
+      BONE: 12.0
     head: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjZmMTViOWNkYWE4MzQyZWY0ZDlkNjRkNzc2NzlhNTkyYTIwYzVlMTNlMTg3NTVhN2E0M2EzNTI2NzdmZDA3MSJ9fX0="

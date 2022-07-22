@@ -28,27 +28,20 @@ public class YamlDatabase implements Database {
             return;
         }
 
-        plugin.debug("Loading collectors...");
         for (Collector collector : getCollectors()) {
-            plugin.debug("Loading collector: " + collector.getId());
             plugin.getCollectorManager().addCollector(collector, false);
-            plugin.debug("Loaded collector: " + collector.getId());
         }
-        plugin.debug("Loaded collectors.");
     }
 
     @Override
     public void saveAll() {
-        plugin.debug("Saving collectors...");
         for (Collector collector : plugin.getCollectorManager().getCollectors()) {
             saveCollector(collector);
         }
-        plugin.debug("Saved collectors.");
     }
 
     @Override
     public void saveCollector(Collector collector) {
-        plugin.debug("Saving collector: " + collector.getId());
         YamlData data = new YamlData(DATA_DIRECTORY, collector.getId().toString());
         data.create();
         data.set("location", LocationUtils.getLocation(collector.getLocation()));
@@ -61,7 +54,6 @@ public class YamlDatabase implements Database {
             data.set("collected." + entry.getKey().name(), entry.getValue().getAmount());
         }
         data.save();
-        plugin.debug("Saved collector: " + collector.getId());
     }
 
     @Override

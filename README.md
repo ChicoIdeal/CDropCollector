@@ -5,6 +5,8 @@ WIP, not guaranteed to work for now.
 To build and contribute this project, you will need to create a directory called "libs" and add some plugin jars into it.
 - UltimateClaims
 - zItemStacker
+- PlotSquared Bukkit v3
+- PlotSquared Bukkit v4
 
 These plugins doesn't have a repo or the jar in the repo is outdated.
 

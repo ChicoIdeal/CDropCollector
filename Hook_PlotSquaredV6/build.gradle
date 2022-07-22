@@ -1,0 +1,19 @@
+java {
+    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+}
+
+group 'dev.crius'
+version '1.0'
+
+repositories {
+    maven { url = uri("https://papermc.io/repo/repository/maven-public/") }
+    maven { url = uri("https://maven.enginehub.org/repo/") }
+}
+
+dependencies {
+    compileOnly parent
+
+    implementation(platform("com.intellectualsites.bom:bom-1.18.x:1.11"))
+    compileOnly("com.plotsquared:PlotSquared-Bukkit")
+    compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.2.10")
+}

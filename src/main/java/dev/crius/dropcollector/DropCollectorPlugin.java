@@ -54,6 +54,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Map;
@@ -360,6 +361,8 @@ public final class DropCollectorPlugin extends JavaPlugin {
             regionManager = new SuperiorSkyBlockRegionManager(this);
         else if (pluginManager.getPlugin("UltimateClaims") != null)
             regionManager = new UltimateClaimsRegionManager(this);
+        else if (pluginManager.getPlugin("PlotSquared") != null)
+            regionManager = getPlotSquaredRegionManager();
         else
             regionManager = new ChunkBasedRegionManager(this);
 
@@ -387,11 +390,43 @@ public final class DropCollectorPlugin extends JavaPlugin {
                 case "UltimateClaims":
                     regionManager = new UltimateClaimsRegionManager(this);
                     break;
+                case "PlotSquared":
+                    regionManager = getPlotSquaredRegionManager();
+                    break;
             }
 
         regionManager.init();
 
         log("Using " + regionManager.getName() + " as region manager.");
+    }
+
+    private RegionManager getPlotSquaredRegionManager() {
+        RegionManager manager = null;
+
+        if (checkPSClass("com.intellectualcrafters.plot.api.PlotAPI"))
+            manager = new PlotSquaredV3RegionManager(this);
+        else if (checkPSClass("com.github.intellectualsites.plotsquared.api.PlotAPI"))
+            manager = new PlotSquaredV4RegionManager(this);
+        else if (checkPSClass("com.plotsquared.core.PlotAPI")) {
+            try {
+                manager = (RegionManager) Class.forName("dev.crius.dropcollector.region.impl.PlotSquaredV6RegionManager")
+                        .getConstructor(DropCollectorPlugin.class).newInstance(this);
+            } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
+                     NoSuchMethodException | ClassNotFoundException e) {
+                throw new RuntimeException("Could not create an instance for PlotSquared v6 Region Manager!", e);
+            }
+        }
+
+        return manager;
+    }
+
+    private boolean checkPSClass(String clazz) {
+        try {
+            Class.forName(clazz);
+            return true;
+        } catch (ClassNotFoundException ignored) {
+            return false;
+        }
     }
 
     public void setupStackerManager() {

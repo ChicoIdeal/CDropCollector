@@ -17,8 +17,8 @@ public class Config extends YamlConfiguration {
 
     public void create() {
         if (!file.exists()) {
-            if (file.getParentFile().mkdirs())
-                plugin.saveResource(this.file.getName(), false);
+            file.getParentFile().mkdirs();
+            plugin.saveResource(this.file.getName(), false);
         }
 
         reload();

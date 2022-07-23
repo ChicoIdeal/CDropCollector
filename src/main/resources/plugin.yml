@@ -12,6 +12,7 @@ softdepend:
   - GriefPrevention
   - GriefDefender
   - UltimateClaims
+  - PlotSquared
   - EconomyShopGUI
   - EconomyShopGUI-Premium
   - ShopGUIPlus

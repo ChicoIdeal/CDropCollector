@@ -235,12 +235,14 @@ public class CollectorGui {
                         player.getInventory().addItem(ItemBuilder.from(collectedItem.getItem().getMaterial().parseItem())
                                 .amount(amount).build());
 
+                        String key = ItemUtils.getKey(collectedItem.getItem().getMaterial().parseMaterial());
                         PLUGIN.getAdventure().player(player).sendMessage(ChatUtils.format(
                                 PLUGIN.getPluginConfig().getString("Messages.took"),
                                 Placeholder.unparsed("amount", String.valueOf(amount)),
-                                Placeholder.unparsed("item", ItemUtils.getLocalizedName(
-                                        collectedItem.getItem().getMaterial().parseItem()
-                                ))
+                                Placeholder.component("item", key != null ?
+                                        Component.translatable(key) :
+                                        Component.text(collectedItem.getItem().getMaterial().parseMaterial().name())
+                                )
                         ));
                     } else if (event.isRightClick() && (!(PLUGIN.getEconomyManager() instanceof EmptyEconomyManager))) {
                         CollectorSellEvent sellEvent = new CollectorSellEvent(collector, collectedItem, amount, false);
@@ -251,13 +253,16 @@ public class CollectorGui {
                         total = total - (PLUGIN.getPluginConfig().getInt("Settings.tax") * total / 100);
 
                         PLUGIN.getEconomyManager().add(player, total);
+
+                        String key = ItemUtils.getKey(collectedItem.getItem().getMaterial().parseMaterial());
                         PLUGIN.getAdventure().player(player).sendMessage(ChatUtils.format(
                                 PLUGIN.getPluginConfig().getString("Messages.sold"),
                                 Placeholder.unparsed("price", ChatUtils.FORMATTER.format(total)),
                                 Placeholder.unparsed("amount", String.valueOf(amount)),
-                                Placeholder.unparsed("item", ItemUtils.getLocalizedName(
-                                        collectedItem.getItem().getMaterial().parseItem()
-                                ))
+                                Placeholder.component("item", key != null ?
+                                        Component.translatable(key) :
+                                        Component.text(collectedItem.getItem().getMaterial().parseMaterial().name())
+                                )
                         ));
                     }
 

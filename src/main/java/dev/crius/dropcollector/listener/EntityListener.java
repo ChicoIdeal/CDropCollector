@@ -1,9 +1,7 @@
 package dev.crius.dropcollector.listener;
 
 import dev.crius.dropcollector.DropCollectorPlugin;
-import dev.crius.dropcollector.util.ChatUtils;
 import lombok.RequiredArgsConstructor;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Mob;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

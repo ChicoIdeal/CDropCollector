@@ -1,6 +1,7 @@
 package dev.crius.dropcollector;
 
 import dev.crius.dropcollector.collector.CollectorManager;
+import dev.crius.dropcollector.command.BuyCommand;
 import dev.crius.dropcollector.command.GiveCommand;
 import dev.crius.dropcollector.command.MainCommand;
 import dev.crius.dropcollector.command.ReloadCommand;
@@ -211,7 +212,8 @@ public final class DropCollectorPlugin extends JavaPlugin {
         commandManager.registerCommand(
                 new MainCommand(this),
                 new GiveCommand(this),
-                new ReloadCommand(this)
+                new ReloadCommand(this),
+                new BuyCommand(this)
         );
 
         commandManager.registerMessage(MessageKey.INVALID_ARGUMENT, (sender, context) -> adventure.sender(sender)

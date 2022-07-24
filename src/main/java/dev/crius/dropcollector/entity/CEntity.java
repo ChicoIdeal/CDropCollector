@@ -17,6 +17,7 @@ public class CEntity {
     private final Set<CItem> materials;
     private final ItemStack head;
     private final String texture;
+    private final double price;
 
     @Override
     public boolean equals(Object o) {

@@ -26,6 +26,7 @@ public class EntityManager {
         for (String entityName : section.getKeys(false)) {
             String displayName = section.getString(entityName + ".displayName");
             String texture = section.getString(entityName + ".head", "");
+            double price = section.getDouble(entityName + ".price");
             ItemStack head = ItemBuilder.skull().texture(texture).build();
             Set<CItem> materials = new HashSet<>();
             for (String s : section.getConfigurationSection(entityName + ".materials").getKeys(false)) {
@@ -35,7 +36,7 @@ public class EntityManager {
                         .getPrice(item, section.getDouble(entityName + ".materials." + s))));
             }
 
-            entityMap.put(entityName, new CEntity(entityName, displayName, materials, head, texture));
+            entityMap.put(entityName, new CEntity(entityName, displayName, materials, head, texture, price));
         }
     }
 

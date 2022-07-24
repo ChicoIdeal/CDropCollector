@@ -22,7 +22,7 @@ import java.util.Map;
 public class DecentHologramsManager extends HologramManager {
 
     // this is required to make a hologram clickable
-    private static final Action ACTION = new Action(ActionType.PAGE, "");
+    private static final Action ACTION = new Action(ActionType.NONE, "");
 
     private final Map<String, Hologram> hologramMap = new HashMap<>();
 
@@ -34,7 +34,8 @@ public class DecentHologramsManager extends HologramManager {
     public void create(String id, Location location, Collector collector) {
         Hologram hologram = DHAPI.createHologram(id, location);
 
-        DHAPI.addHologramLine(hologram, collector.getEntity().getHead());
+        DHAPI.addHologramLine(hologram, "#ICON: "
+                + collector.getEntity().getHead().getType().name() + " (" + collector.getEntity().getTexture() + ")");
 
         collector.getHoloLines().forEach(line -> DHAPI.addHologramLine(hologram, line));
 

@@ -110,36 +110,48 @@ public class CollectorGui {
                     .asGuiItem((event) -> UpgradeGui.open(player, collector));
             gui.setItem(PLUGIN.getPluginConfig().getInt("Gui.items.upgrade.slot"), upgrade);
 
-            if (collector.isAutoSellEnabled()) {
-                GuiItem disableAutoSell = ItemBuilder.from(
-                                XMaterial.matchXMaterial(PLUGIN.getPluginConfig()
-                                        .getString("Gui.items.auto-sell-enabled.material")).orElse(null).parseItem())
-                        .name(ChatUtils.format(PLUGIN.getPluginConfig().getString("Gui.items.auto-sell-enabled.displayName")))
-                        .lore(ChatUtils.format(PLUGIN.getPluginConfig().getStringList("Gui.items.auto-sell-enabled.lore")))
-                        .asGuiItem((event) -> {
-                            collector.setAutoSellEnabled(false);
-                            PLUGIN.getAdventure().player(player).sendMessage(ChatUtils.format(
-                                    PLUGIN.getPluginConfig().getString("Messages.disabled-auto-sell")
-                            ));
+            if (PLUGIN.getPluginConfig().getBoolean("Settings.auto-sell")) {
+                if (collector.isAutoSellEnabled()) {
+                    GuiItem disableAutoSell = ItemBuilder.from(
+                                    XMaterial.matchXMaterial(PLUGIN.getPluginConfig()
+                                            .getString("Gui.items.auto-sell-enabled.material"))
+                                            .orElse(null).parseItem())
+                            .name(ChatUtils.format(
+                                    PLUGIN.getPluginConfig().getString("Gui.items.auto-sell-enabled.displayName")
+                            ))
+                            .lore(ChatUtils.format(
+                                    PLUGIN.getPluginConfig().getStringList("Gui.items.auto-sell-enabled.lore")
+                            ))
+                            .asGuiItem((event) -> {
+                                collector.setAutoSellEnabled(false);
+                                PLUGIN.getAdventure().player(player).sendMessage(ChatUtils.format(
+                                        PLUGIN.getPluginConfig().getString("Messages.disabled-auto-sell")
+                                ));
 
-                            open(player, collector);
-                        });
-                gui.setItem(PLUGIN.getPluginConfig().getInt("Gui.items.auto-sell-enabled.slot"), disableAutoSell);
-            } else {
-                GuiItem enableAutoSell = ItemBuilder.from(
-                                XMaterial.matchXMaterial(PLUGIN.getPluginConfig()
-                                        .getString("Gui.items.auto-sell-disabled.material")).orElse(null).parseItem())
-                        .name(ChatUtils.format(PLUGIN.getPluginConfig().getString("Gui.items.auto-sell-disabled.displayName")))
-                        .lore(ChatUtils.format(PLUGIN.getPluginConfig().getStringList("Gui.items.auto-sell-disabled.lore")))
-                        .asGuiItem((event) -> {
-                            collector.setAutoSellEnabled(true);
-                            PLUGIN.getAdventure().player(player).sendMessage(ChatUtils.format(
-                                    PLUGIN.getPluginConfig().getString("Messages.enabled-auto-sell")
-                            ));
+                                open(player, collector);
+                            });
+                    gui.setItem(PLUGIN.getPluginConfig().getInt("Gui.items.auto-sell-enabled.slot"), disableAutoSell);
+                } else {
+                    GuiItem enableAutoSell = ItemBuilder.from(
+                                    XMaterial.matchXMaterial(PLUGIN.getPluginConfig()
+                                            .getString("Gui.items.auto-sell-disabled.material"))
+                                            .orElse(null).parseItem())
+                            .name(ChatUtils.format(
+                                    PLUGIN.getPluginConfig().getString("Gui.items.auto-sell-disabled.displayName")
+                            ))
+                            .lore(ChatUtils.format(
+                                    PLUGIN.getPluginConfig().getStringList("Gui.items.auto-sell-disabled.lore")
+                            ))
+                            .asGuiItem((event) -> {
+                                collector.setAutoSellEnabled(true);
+                                PLUGIN.getAdventure().player(player).sendMessage(ChatUtils.format(
+                                        PLUGIN.getPluginConfig().getString("Messages.enabled-auto-sell")
+                                ));
 
-                            open(player, collector);
-                        });
-                gui.setItem(PLUGIN.getPluginConfig().getInt("Gui.items.auto-sell-disabled.slot"), enableAutoSell);
+                                open(player, collector);
+                            });
+                    gui.setItem(PLUGIN.getPluginConfig().getInt("Gui.items.auto-sell-disabled.slot"), enableAutoSell);
+                }
             }
         }
 

@@ -26,6 +26,8 @@ Settings:
     - SKELETON
     - BLAZE
     - IRON_GOLEM
+  # Spawn Reasons can be found in:
+  # https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/event/entity/CreatureSpawnEvent.SpawnReason.html
   auto-kill-reasons:
     - NATURAL
     - SPAWNER

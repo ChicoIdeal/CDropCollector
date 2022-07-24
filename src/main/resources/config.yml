@@ -26,6 +26,9 @@ Settings:
     - SKELETON
     - BLAZE
     - IRON_GOLEM
+  auto-kill-reasons:
+    - NATURAL
+    - SPAWNER
 
   database:
     # available types: YAML, MYSQL, MONGO

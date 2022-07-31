@@ -320,6 +320,8 @@ public final class DropCollectorPlugin extends JavaPlugin {
             shopManager = new ShopGuiPlusShopManager();
         else if (pluginManager.getPlugin("OneStopShop") != null)
             shopManager = new OneStopShopShopManager();
+        else if (pluginManager.getPlugin("GUIShop") != null)
+            shopManager = new GUIShopShopManager();
         else
             shopManager = new EmptyShopManager();
 
@@ -335,6 +337,9 @@ public final class DropCollectorPlugin extends JavaPlugin {
                     break;
                 case "OneStopShop":
                     shopManager = new OneStopShopShopManager();
+                    break;
+                case "GUIShop":
+                    shopManager = new GUIShopShopManager();
                     break;
             }
 

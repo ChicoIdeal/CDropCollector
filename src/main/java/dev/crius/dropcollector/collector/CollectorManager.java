@@ -105,6 +105,10 @@ public class CollectorManager {
                 collector.getHologramId().equals(holoId)).findFirst().orElse(null);
     }
 
+    public Collector getCollector(UUID uuid) {
+        return collectorMap.get(uuid);
+    }
+
     public void openMenu(Player player, Collector collector) {
         CollectorGui.open(player, collector);
     }

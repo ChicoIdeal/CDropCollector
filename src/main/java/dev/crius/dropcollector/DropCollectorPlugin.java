@@ -20,6 +20,7 @@ import dev.crius.dropcollector.entity.EntityManager;
 import dev.crius.dropcollector.hologram.HologramManager;
 import dev.crius.dropcollector.hologram.impl.DecentHologramsManager;
 import dev.crius.dropcollector.hologram.impl.EmptyHologramManager;
+import dev.crius.dropcollector.hologram.impl.HologramLibHologramManager;
 import dev.crius.dropcollector.hologram.impl.HolographicDisplaysManager;
 import dev.crius.dropcollector.listener.CropListener;
 import dev.crius.dropcollector.listener.EntityListener;
@@ -259,6 +260,8 @@ public final class DropCollectorPlugin extends JavaPlugin {
             hologramManager = new HolographicDisplaysManager(this);
         else if (pluginManager.getPlugin("DecentHolograms") != null)
             hologramManager = new DecentHologramsManager(this);
+        else if (pluginManager.getPlugin("ProtocolLib") != null)
+            hologramManager = new HologramLibHologramManager(this);
         else
             hologramManager = new EmptyHologramManager(this);
 
@@ -270,6 +273,10 @@ public final class DropCollectorPlugin extends JavaPlugin {
                     break;
                 case "DecentHolograms":
                     hologramManager = new DecentHologramsManager(this);
+                    break;
+                case "HologramLib":
+                    if (pluginManager.getPlugin("ProtocolLib") != null)
+                        hologramManager = new HologramLibHologramManager(this);
                     break;
             }
 

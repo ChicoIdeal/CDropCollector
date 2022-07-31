@@ -3,6 +3,7 @@ package dev.crius.dropcollector.hologram.impl;
 import dev.crius.dropcollector.DropCollectorPlugin;
 import dev.crius.dropcollector.collector.Collector;
 import dev.crius.dropcollector.hologram.HologramManager;
+import dev.crius.dropcollector.region.RegionManager;
 import dev.crius.dropcollector.util.ChatUtils;
 import dev.crius.dropcollector.xseries.XMaterial;
 import org.bukkit.Bukkit;
@@ -45,6 +46,8 @@ public class EmptyHologramManager extends HologramManager {
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
                 for (Collector collector : plugin.getCollectorManager().getCollectors()) {
+                    if (!player.hasPermission(RegionManager.BYPASS_PERMISSION) &&
+                            !plugin.getRegionManager().canManage(player, collector)) return;
                     if (!collector.getLocation().equals(event.getClickedBlock().getLocation())) continue;
 
                     plugin.getCollectorManager().openMenu(player, collector);
@@ -54,6 +57,8 @@ public class EmptyHologramManager extends HologramManager {
             if (expiringSet.contains(player.getUniqueId())) {
                 Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
                     for (Collector collector : plugin.getCollectorManager().getCollectors()) {
+                        if (!player.hasPermission(RegionManager.BYPASS_PERMISSION) &&
+                                !plugin.getRegionManager().canManage(player, collector)) return;
                         if (!collector.getLocation().equals(event.getClickedBlock().getLocation())) continue;
 
                         plugin.getCollectorManager().breakCollector(player, collector);

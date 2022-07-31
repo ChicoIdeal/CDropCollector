@@ -1,16 +1,13 @@
 package dev.crius.dropcollector.hologram.impl;
 
+import com.github.unldenis.hologram.Hologram;
+import com.github.unldenis.hologram.HologramPool;
+import com.github.unldenis.hologram.event.PlayerHologramInteractEvent;
 import dev.crius.dropcollector.DropCollectorPlugin;
 import dev.crius.dropcollector.collector.Collector;
 import dev.crius.dropcollector.hologram.HologramManager;
 import dev.crius.dropcollector.region.RegionManager;
 import dev.crius.dropcollector.util.ChatUtils;
-import eu.decentsoftware.holograms.api.DHAPI;
-import eu.decentsoftware.holograms.api.actions.Action;
-import eu.decentsoftware.holograms.api.actions.ActionType;
-import eu.decentsoftware.holograms.api.actions.ClickType;
-import eu.decentsoftware.holograms.api.holograms.Hologram;
-import eu.decentsoftware.holograms.event.HologramClickEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -18,55 +15,55 @@ import org.bukkit.event.EventHandler;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 
-public class DecentHologramsManager extends HologramManager {
+public class HologramLibHologramManager extends HologramManager {
 
-    // this is required to make a hologram clickable
-    private static final Action ACTION = new Action(ActionType.NONE, "");
-
+    private final HologramPool hologramPool;
     private final Map<String, Hologram> hologramMap = new HashMap<>();
 
-    public DecentHologramsManager(DropCollectorPlugin plugin) {
-        super(plugin, "DecentHolograms");
+    public HologramLibHologramManager(DropCollectorPlugin plugin) {
+        super(plugin, "HologramLib");
+        hologramPool = new HologramPool(plugin, 100, 0, 5);
     }
 
     @Override
     public void create(String id, Location location, Collector collector) {
-        Hologram hologram = DHAPI.createHologram(id, location);
+        Hologram.Builder builder = Hologram.builder().location(location);
 
-        DHAPI.addHologramLine(hologram, "#ICON: "
-                + collector.getEntity().getHead().getType().name() + " (" + collector.getEntity().getTexture() + ")");
+        builder.addLine(collector.getEntity().getHead());
+        collector.getHoloLines().forEach(line -> builder.addLine(line, true));
 
-        collector.getHoloLines().forEach(line -> DHAPI.addHologramLine(hologram, line));
-
-        hologramMap.put(id, hologram);
-
-        hologram.getPage(0).addAction(ClickType.RIGHT, ACTION);
+        hologramMap.put(id, builder.build(hologramPool));
     }
 
     @Override
     public void remove(String id) {
         Hologram hologram = hologramMap.remove(id);
         if (hologram != null)
-            hologram.delete();
+            hologramPool.remove(hologram);
     }
 
     @Override
     public void removeAll() {
-        hologramMap.values().forEach(Hologram::delete);
+        hologramMap.values().forEach(hologramPool::remove);
     }
 
     @EventHandler
-    public void onClick(HologramClickEvent event) {
+    public void onClick(PlayerHologramInteractEvent event) {
         Player player = event.getPlayer();
 
         Hologram hologram = event.getHologram();
 
-        Collector collector = plugin.getCollectorManager().getCollector(hologram.getId());
+        UUID id = UUID.fromString(Objects.requireNonNull(this.hologramMap.entrySet().stream().filter(entry ->
+                entry.getValue().equals(hologram)).findFirst().orElse(null)).getKey());
+
+        Collector collector = plugin.getCollectorManager().getCollector(id);
         if (!player.hasPermission(RegionManager.BYPASS_PERMISSION) &&
                 !plugin.getRegionManager().canManage(player, collector)) return;
 
-        if (event.getClick() != ClickType.SHIFT_LEFT) {
+        if (!event.getPlayer().isSneaking()) {
             Bukkit.getScheduler().runTask(plugin, () -> plugin.getCollectorManager().openMenu(player, collector));
         } else {
             if (expiringSet.contains(player.getUniqueId())) {

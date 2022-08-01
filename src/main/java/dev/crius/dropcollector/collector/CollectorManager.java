@@ -31,7 +31,7 @@ public class CollectorManager {
     }
 
     public void removeCollector(Collector collector) {
-        plugin.getHologramManager().remove(collector.getHologramId());
+        plugin.getHologramManager().remove(collector);
         collectorMap.remove(collector.getId());
         plugin.getPluginDatabase().remove(collector);
     }

@@ -36,6 +36,11 @@ public class InteractListener implements Listener {
 
         Player player = event.getPlayer();
 
+        ItemStack item = event.getItem();
+        NBTItem nbtItem = new NBTItem(item);
+
+        if (!nbtItem.hasKey("dropcollector:creator")) return;
+
         if (!plugin.getPluginConfig().getStringList("Settings.enabled-worlds").contains(player.getWorld().getName())) {
             plugin.getAdventure().player(player).sendMessage(ChatUtils.format(
                     plugin.getPluginConfig().getString("Messages.cannot-create-world")
@@ -43,11 +48,6 @@ public class InteractListener implements Listener {
             event.setCancelled(true);
             return;
         }
-
-        ItemStack item = event.getItem();
-        NBTItem nbtItem = new NBTItem(item);
-
-        if (!nbtItem.hasKey("dropcollector:creator")) return;
 
         CEntity entity = plugin.getEntityManager().getEntity(nbtItem.getString("dropcollector:type"));
         if (entity == null) return; // this creator is broken, skip

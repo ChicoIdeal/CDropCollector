@@ -58,7 +58,6 @@ dependencies {
     // hologram plugins
     compileOnly 'com.gmail.filoghost.holographicdisplays:holographicdisplays-api:2.4.9'
     compileOnly 'com.github.decentsoftware-eu:decentholograms:2.5.1'
-    implementation 'com.github.unldenis:Hologram-Lib:master-SNAPSHOT'
 
     // economy plugins
     compileOnly 'org.black_ixx:playerpoints:3.2.4'
@@ -135,7 +134,6 @@ shadowJar {
     relocate 'com.mongodb', 'dev.crius.dropcollector.thirdparty.com.mongodb'
     relocate 'org.bson', 'dev.crius.dropcollector.thirdparty.org.bson'
     relocate 'org.bstats', 'dev.crius.dropcollector.thirdparty.org.bstats'
-    relocate 'com.github.unldenis', 'dev.crius.dropcollector.thirdparty.com.github.unldenis'
 
     from sourceSets.getByName("main").output
     configurations = [project.configurations.getByName("runtimeClasspath")]

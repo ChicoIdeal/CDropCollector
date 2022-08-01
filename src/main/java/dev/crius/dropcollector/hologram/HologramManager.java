@@ -31,7 +31,7 @@ public abstract class HologramManager implements Listener, Hook {
 
     public abstract void create(String id, Location location, Collector collector);
 
-    public abstract void remove(String id);
+    public abstract void remove(Collector collector);
 
     public abstract void removeAll();
 

@@ -8,6 +8,7 @@ import dev.crius.dropcollector.util.ChatUtils;
 import dev.crius.dropcollector.xseries.XMaterial;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Skull;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -27,8 +28,8 @@ public class EmptyHologramManager extends HologramManager {
     }
 
     @Override
-    public void remove(String id) {
-
+    public void remove(Collector collector) {
+        Bukkit.getScheduler().runTask(plugin, () -> collector.getLocation().getBlock().setType(Material.AIR));
     }
 
     @Override
@@ -48,7 +49,7 @@ public class EmptyHologramManager extends HologramManager {
                 for (Collector collector : plugin.getCollectorManager().getCollectors()) {
                     if (!player.hasPermission(RegionManager.BYPASS_PERMISSION) &&
                             !plugin.getRegionManager().canManage(player, collector)) return;
-                    if (!collector.getLocation().equals(event.getClickedBlock().getLocation())) continue;
+                    if (collector.getLocation().distance(event.getClickedBlock().getLocation()) > 2) continue;
 
                     plugin.getCollectorManager().openMenu(player, collector);
                 }
@@ -59,7 +60,7 @@ public class EmptyHologramManager extends HologramManager {
                     for (Collector collector : plugin.getCollectorManager().getCollectors()) {
                         if (!player.hasPermission(RegionManager.BYPASS_PERMISSION) &&
                                 !plugin.getRegionManager().canManage(player, collector)) return;
-                        if (!collector.getLocation().equals(event.getClickedBlock().getLocation())) continue;
+                        if (collector.getLocation().distance(event.getClickedBlock().getLocation()) > 2) continue;
 
                         plugin.getCollectorManager().breakCollector(player, collector);
                     }

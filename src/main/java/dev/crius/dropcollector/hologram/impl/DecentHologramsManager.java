@@ -45,8 +45,8 @@ public class DecentHologramsManager extends HologramManager {
     }
 
     @Override
-    public void remove(String id) {
-        Hologram hologram = hologramMap.remove(id);
+    public void remove(Collector collector) {
+        Hologram hologram = hologramMap.remove(collector.getHologramId());
         if (hologram != null)
             hologram.delete();
     }

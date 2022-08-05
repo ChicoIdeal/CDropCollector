@@ -158,6 +158,7 @@ public class MySQLDatabase implements Database {
                         builder.deleteCharAt(builder.lastIndexOf(",")).toString() : builder.toString();
 
                 statement.setString(9, collected);
+                statement.executeUpdate();
             } catch (SQLException exception) {
                 plugin.log("An exception was found in database!", exception);
             }

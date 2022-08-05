@@ -1,6 +1,8 @@
 package dev.crius.dropcollector.collector;
 
 import dev.crius.dropcollector.DropCollectorPlugin;
+import dev.crius.dropcollector.collector.log.ItemLog;
+import dev.crius.dropcollector.collector.log.LogType;
 import dev.crius.dropcollector.database.impl.mongo.model.CollectorModel;
 import dev.crius.dropcollector.database.impl.yaml.YamlData;
 import dev.crius.dropcollector.entity.CEntity;
@@ -18,10 +20,7 @@ import org.bukkit.Location;
 import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Data
 @AllArgsConstructor
@@ -38,6 +37,7 @@ public class Collector {
     private boolean autoSellEnabled = true;
     private final List<String> holoLines;
     private final Map<XMaterial, CollectedItem> itemMap = new HashMap<>();
+    private final Deque<ItemLog> logs = new ArrayDeque<>();
 
     public Collector(CEntity entity, UUID owner, Location location) {
         this.id = UUID.randomUUID();
@@ -71,6 +71,11 @@ public class Collector {
         );
         this.autoSellEnabled = data.getBoolean("auto-sell");
 
+        for (String str : data.getStringList("logs")) {
+            String[] s = str.split(",");
+            this.logs.addFirst(new ItemLog(LogType.valueOf(s[0]), s[1], Integer.parseInt(s[2]), s[3]));
+        }
+
         for (CItem item : this.entity.getMaterials()) {
             CollectedItem collectedItem = new CollectedItem(item);
             collectedItem.setAmount(data.getInt("collected." + item.getMaterial().name()));
@@ -90,6 +95,11 @@ public class Collector {
                 new Placeholder("<display-name>", this.entity.getDisplayName())
         );
         this.autoSellEnabled = resultSet.getBoolean("autoSell");
+
+        for (String str : resultSet.getString("logs").split(";")) {
+            String[] s = str.split(",");
+            this.logs.addFirst(new ItemLog(LogType.valueOf(s[0]), s[1], Integer.parseInt(s[2]), s[3]));
+        }
 
         String collected = resultSet.getString("collected");
         for (CItem item : this.entity.getMaterials()) {
@@ -119,6 +129,7 @@ public class Collector {
                 new Placeholder("<display-name>", this.entity.getDisplayName())
         );
         this.autoSellEnabled = model.autoSell;
+        this.logs.addAll(model.logs);
 
         for (CItem item : this.entity.getMaterials()) {
             int amount = model.itemMap.getOrDefault(item.getMaterial().name(), 0);
@@ -179,8 +190,33 @@ public class Collector {
             map.put(item.getItem().getMaterial().name(), item.getAmount());
         }
         model.itemMap = map;
+        model.logs = this.logs;
 
         return model;
+    }
+
+    public void addLog(ItemLog itemLog) {
+        if (this.logs.size() >= 5) {
+            this.logs.pollLast();
+        }
+
+        this.logs.addFirst(itemLog);
+    }
+
+    public void addLog(LogType type, String material, int amount, String name) {
+        addLog(new ItemLog(type, material, amount, name));
+    }
+
+    public void addLog(LogType type, XMaterial material, int amount, String name) {
+        addLog(type, material.toString(), amount, name);
+    }
+
+    public void addLog(LogType type, CollectedItem item, int amount, String name) {
+        addLog(type, item.getItem().getMaterial(), amount, name);
+    }
+
+    public void addLog(LogType type, int amount, String name) {
+        addLog(type, "ALL", amount, name);
     }
 
 }

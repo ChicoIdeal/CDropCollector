@@ -5,6 +5,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import dev.crius.dropcollector.DropCollectorPlugin;
 import dev.crius.dropcollector.collector.CollectedItem;
 import dev.crius.dropcollector.collector.Collector;
+import dev.crius.dropcollector.collector.log.ItemLog;
 import dev.crius.dropcollector.database.Database;
 import dev.crius.dropcollector.util.LocationUtils;
 import lombok.RequiredArgsConstructor;
@@ -62,7 +63,7 @@ public class MySQLDatabase implements Database {
              Statement statement = connection.createStatement()) {
             statement.execute("CREATE TABLE IF NOT EXISTS `" + table + "` (uuid varchar(255) NOT NULL UNIQUE," +
                     " owner varchar(255) NOT NULL, location varchar(100) NOT NULL, " +
-                    "`level` integer, enabled BOOLEAN, entity varchar(50), autoSell BOOLEAN, collected TEXT);");
+                    "`level` integer, enabled BOOLEAN, entity varchar(50), autoSell BOOLEAN, logs TEXT, collected TEXT);");
         } catch (SQLException exception) {
             plugin.log("An exception was found in database!", exception);
         }
@@ -76,8 +77,8 @@ public class MySQLDatabase implements Database {
     public void saveAll() {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement("REPLACE INTO `" + table
-                     + "` (uuid, owner, location, `level`, enabled, entity, autoSell, collected)" +
-                     " VALUES (?, ?, ?, ?, ?, ?, ?, ?);")) {
+                     + "` (uuid, owner, location, `level`, enabled, entity, autoSell, logs, collected)" +
+                     " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);")) {
 
             for (Collector collector : plugin.getCollectorManager().getCollectors()) {
                 statement.setString(1, collector.getId().toString());
@@ -89,6 +90,18 @@ public class MySQLDatabase implements Database {
                 statement.setBoolean(7, collector.isAutoSellEnabled());
 
                 StringBuilder builder = new StringBuilder();
+                for (ItemLog log : collector.getLogs()) {
+                    builder.append(log.getType().name())
+                            .append(',')
+                            .append(log.getMaterial()).append(',')
+                            .append(log.getAmount()).append(',')
+                            .append(log.getPlayer()).append(';');
+                }
+                String logs = builder.length() > 1 ?
+                        builder.deleteCharAt(builder.lastIndexOf(";")).toString() : builder.toString();
+                statement.setString(8, logs);
+
+                builder = new StringBuilder();
                 for (CollectedItem item : collector.getItemMap().values()) {
                     builder.append(item.getItem().getMaterial().name())
                             .append(':')
@@ -98,7 +111,7 @@ public class MySQLDatabase implements Database {
                 String collected = builder.length() > 1 ?
                         builder.deleteCharAt(builder.lastIndexOf(",")).toString() : builder.toString();
 
-                statement.setString(7, collected);
+                statement.setString(9, collected);
                 statement.executeUpdate();
             }
         } catch (SQLException exception) {
@@ -111,7 +124,8 @@ public class MySQLDatabase implements Database {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             try (Connection connection = dataSource.getConnection();
                  PreparedStatement statement = connection.prepareStatement("REPLACE INTO `" + table
-                         + "` (uuid, owner, location, `level`, enabled, entity, collected) VALUES (?, ?, ?, ?, ?, ?, ?);")) {
+                         + "` (uuid, owner, location, `level`, enabled, entity, logs, collected) " +
+                         "VALUES (?, ?, ?, ?, ?, ?, ?, ?);")) {
 
                 statement.setString(1, collector.getId().toString());
                 statement.setString(2, collector.getOwner().toString());
@@ -122,6 +136,18 @@ public class MySQLDatabase implements Database {
                 statement.setBoolean(7, collector.isAutoSellEnabled());
 
                 StringBuilder builder = new StringBuilder();
+                for (ItemLog log : collector.getLogs()) {
+                    builder.append(log.getType().name())
+                            .append(',')
+                            .append(log.getMaterial()).append(',')
+                            .append(log.getAmount()).append(',')
+                            .append(log.getPlayer()).append(';');
+                }
+                String logs = builder.length() > 1 ?
+                        builder.deleteCharAt(builder.lastIndexOf(";")).toString() : builder.toString();
+                statement.setString(8, logs);
+
+                builder = new StringBuilder();
                 for (CollectedItem item : collector.getItemMap().values()) {
                     builder.append(item.getItem().getMaterial().name())
                             .append(':')
@@ -131,8 +157,7 @@ public class MySQLDatabase implements Database {
                 String collected = builder.length() > 1 ?
                         builder.deleteCharAt(builder.lastIndexOf(",")).toString() : builder.toString();
 
-                statement.setString(7, collected);
-                statement.executeUpdate();
+                statement.setString(9, collected);
             } catch (SQLException exception) {
                 plugin.log("An exception was found in database!", exception);
             }

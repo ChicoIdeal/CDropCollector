@@ -6,7 +6,7 @@ import org.bukkit.Material;
 public class ItemUtils {
 
     public static String getKey(Material material) {
-        if (!XMaterial.supports(12)) return null;
+        if (!XMaterial.supports(13)) return null;
 
         return (material.isItem() ? "item." : "block.") + "minecraft." + material.getKey().getKey();
     }

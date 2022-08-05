@@ -5,6 +5,7 @@ import dev.crius.dropcollector.api.event.CollectorCollectEvent;
 import dev.crius.dropcollector.api.event.CollectorSellEvent;
 import dev.crius.dropcollector.collector.CollectedItem;
 import dev.crius.dropcollector.collector.Collector;
+import dev.crius.dropcollector.collector.log.LogType;
 import dev.crius.dropcollector.entity.CEntity;
 import dev.crius.dropcollector.util.ChatUtils;
 import dev.crius.dropcollector.xseries.XMaterial;
@@ -54,17 +55,20 @@ public class ItemListener implements Listener {
             OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(collector.getOwner());
 
             double total = 0;
+            int totalAmount = 0;
             for (CollectedItem collected : collector.getItemMap().values()) {
                 CollectorSellEvent sellEvent = new CollectorSellEvent(collector, collected, collected.getAmount(), true);
                 Bukkit.getPluginManager().callEvent(sellEvent);
                 if (sellEvent.isCancelled()) continue;
 
+                totalAmount += collected.getAmount();
                 total += collected.getItem().getPrice() * collected.getAmount();
                 collected.setAmount(0);
             }
             total = total - (plugin.getPluginConfig().getInt("Settings.tax") * total / 100);
 
             plugin.getEconomyManager().add(offlinePlayer, total);
+            collector.addLog(LogType.SELL, totalAmount, offlinePlayer.getName());
 
             if (offlinePlayer.isOnline()) {
                 Player player = offlinePlayer.getPlayer();

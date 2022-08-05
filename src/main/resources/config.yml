@@ -155,6 +155,13 @@ Messages:
   unknown-command: "<prefix> <red>Unknown command."
   invalid-argument: "<prefix> <red>Invalid argument."
 
+  log-header: "<dark_gray><strikethrough>--------</strikethrough> <gold><bold>Collector Logs</bold> <dark_gray><strikethrough>--------</strikethrough>"
+  log-format: "<gray> - <player> <type> x<amount> <material>"
+
+  log-types:
+    pick: "picked"
+    sell: "sold"
+
 # Available placeholders:
 # <type-displayname> for displayName and lore.
 Creator-Item:
@@ -211,6 +218,8 @@ Gui:
         - ""
         - "<gray>There are <yellow><current><gray>/<dark_red><max> <gray>items in total."
         - "<gray>Upgrade your collector to get more space!"
+        - ""
+        - "<gold>Click to see the logs!"
 
     status-enabled:
       slot: 44

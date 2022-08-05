@@ -4,6 +4,8 @@ import dev.crius.dropcollector.DropCollectorPlugin;
 import dev.crius.dropcollector.api.event.CollectorSellEvent;
 import dev.crius.dropcollector.collector.CollectedItem;
 import dev.crius.dropcollector.collector.Collector;
+import dev.crius.dropcollector.collector.log.ItemLog;
+import dev.crius.dropcollector.collector.log.LogType;
 import dev.crius.dropcollector.economy.impl.EmptyEconomyManager;
 import dev.crius.dropcollector.util.ChatUtils;
 import dev.crius.dropcollector.util.ItemUtils;
@@ -21,6 +23,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import java.util.List;
+import java.util.Locale;
 
 public class CollectorGui {
 
@@ -81,17 +84,20 @@ public class CollectorGui {
                         if (collector.getTotal() <= 0) return;
 
                         double total = 0;
+                        int totalAmount = 0;
                         for (CollectedItem collectedItem : collector.getItemMap().values()) {
                             CollectorSellEvent sellEvent = new CollectorSellEvent(collector, collectedItem,
                                     collectedItem.getAmount(), false);
                             Bukkit.getPluginManager().callEvent(sellEvent);
                             if (sellEvent.isCancelled()) continue;
 
+                            totalAmount += collectedItem.getAmount();
                             total += collectedItem.getItem().getPrice() * collectedItem.getAmount();
                             collectedItem.setAmount(0);
                         }
                         total = total - (PLUGIN.getPluginConfig().getInt("Settings.tax") * total / 100);
 
+                        collector.addLog(LogType.SELL, totalAmount, player.getName());
                         PLUGIN.getEconomyManager().add(player, total);
                         PLUGIN.getAdventure().player(player).sendMessage(ChatUtils.format(
                                 PLUGIN.getPluginConfig().getString("Messages.sold-all"),
@@ -164,7 +170,27 @@ public class CollectorGui {
                         Placeholder.unparsed("current", ChatUtils.FORMATTER.format(collector.getTotal())),
                         Placeholder.unparsed("max", ChatUtils.FORMATTER.format(collector.getMax()))
                 ))
-                .asGuiItem();
+                .asGuiItem(event -> {
+                    gui.close(player);
+
+                    PLUGIN.getAdventure().player(player).sendMessage(ChatUtils.format(
+                            PLUGIN.getPluginConfig().getString("Messages.log-header")
+                    ));
+
+                    for (ItemLog log : collector.getLogs()) {
+                        PLUGIN.getAdventure().player(player).sendMessage(
+                                ChatUtils.format(
+                                        PLUGIN.getPluginConfig().getString("Messages.log-format"),
+                                        Placeholder.unparsed("player", log.getPlayer()),
+                                        Placeholder.parsed("type",
+                                                PLUGIN.getPluginConfig().getString("Messages.log-types."
+                                                        + log.getType().name().toLowerCase(Locale.ENGLISH))),
+                                        Placeholder.unparsed("amount", ChatUtils.FORMATTER.format(log.getAmount())),
+                                        Placeholder.unparsed("material", log.getMaterial())
+                                )
+                        );
+                    }
+                });
         gui.setItem(PLUGIN.getPluginConfig().getInt("Gui.items.info.slot"), info);
 
         if (collector.isEnabled()) {
@@ -246,6 +272,7 @@ public class CollectorGui {
 
                         player.getInventory().addItem(ItemBuilder.from(collectedItem.getItem().getMaterial().parseItem())
                                 .amount(amount).build());
+                        collector.addLog(LogType.PICK, collectedItem, amount, player.getName());
 
                         String key = ItemUtils.getKey(collectedItem.getItem().getMaterial().parseMaterial());
                         PLUGIN.getAdventure().player(player).sendMessage(ChatUtils.format(
@@ -253,7 +280,7 @@ public class CollectorGui {
                                 Placeholder.unparsed("amount", String.valueOf(amount)),
                                 Placeholder.component("item", key != null ?
                                         Component.translatable(key) :
-                                        Component.text(collectedItem.getItem().getMaterial().parseMaterial().name())
+                                        Component.text(collectedItem.getItem().getMaterial().toString())
                                 )
                         ));
                     } else if (event.isRightClick() && (!(PLUGIN.getEconomyManager() instanceof EmptyEconomyManager))) {
@@ -265,6 +292,7 @@ public class CollectorGui {
                         total = total - (PLUGIN.getPluginConfig().getInt("Settings.tax") * total / 100);
 
                         PLUGIN.getEconomyManager().add(player, total);
+                        collector.addLog(LogType.SELL, collectedItem, amount, player.getName());
 
                         String key = ItemUtils.getKey(collectedItem.getItem().getMaterial().parseMaterial());
                         PLUGIN.getAdventure().player(player).sendMessage(ChatUtils.format(
@@ -273,7 +301,7 @@ public class CollectorGui {
                                 Placeholder.unparsed("amount", String.valueOf(amount)),
                                 Placeholder.component("item", key != null ?
                                         Component.translatable(key) :
-                                        Component.text(collectedItem.getItem().getMaterial().parseMaterial().name())
+                                        Component.text(collectedItem.getItem().getMaterial().toString())
                                 )
                         ));
                     }

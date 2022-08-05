@@ -3,6 +3,7 @@ package dev.crius.dropcollector.database.impl.yaml;
 import dev.crius.dropcollector.DropCollectorPlugin;
 import dev.crius.dropcollector.collector.CollectedItem;
 import dev.crius.dropcollector.collector.Collector;
+import dev.crius.dropcollector.collector.log.ItemLog;
 import dev.crius.dropcollector.database.Database;
 import dev.crius.dropcollector.util.LocationUtils;
 import dev.crius.dropcollector.xseries.XMaterial;
@@ -53,6 +54,17 @@ public class YamlDatabase implements Database {
         for (Map.Entry<XMaterial, CollectedItem> entry : collector.getItemMap().entrySet()) {
             data.set("collected." + entry.getKey().name(), entry.getValue().getAmount());
         }
+        List<String> logs = new ArrayList<>();
+        for (ItemLog log : collector.getLogs()) {
+            StringBuilder builder = new StringBuilder();
+            logs.add(builder.append(log.getType().name())
+                    .append(',')
+                    .append(log.getMaterial()).append(',')
+                    .append(log.getAmount()).append(',')
+                    .append(log.getPlayer()).toString()
+            );
+        }
+        data.set("logs", logs);
         data.save();
     }
 

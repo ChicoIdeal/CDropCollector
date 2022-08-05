@@ -34,6 +34,7 @@ import dev.crius.dropcollector.stacker.impl.*;
 import dev.crius.dropcollector.task.AutoSaveTask;
 import dev.crius.dropcollector.upgrade.UpgradeManager;
 import dev.crius.dropcollector.util.ChatUtils;
+import dev.crius.dropcollector.util.UpdateChecker;
 import dev.triumphteam.cmd.bukkit.BukkitCommandManager;
 import dev.triumphteam.cmd.bukkit.message.BukkitMessageKey;
 import dev.triumphteam.cmd.core.exceptions.CommandRegistrationException;
@@ -41,6 +42,8 @@ import dev.triumphteam.cmd.core.message.MessageKey;
 import dev.triumphteam.gui.guis.BaseGui;
 import lombok.Getter;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+import net.md_5.bungee.api.ChatColor;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SingleLineChart;
 import org.bukkit.Bukkit;
@@ -50,6 +53,10 @@ import org.bukkit.command.CommandMap;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
@@ -86,6 +93,7 @@ public final class DropCollectorPlugin extends JavaPlugin {
     // Others:
     private Database pluginDatabase;
     private BukkitAudiences adventure;
+    private UpdateChecker updateChecker;
 
     @Override
     public void onEnable() {
@@ -110,6 +118,8 @@ public final class DropCollectorPlugin extends JavaPlugin {
         setupMetrics();
 
         setupTasks();
+
+        setupUpdateChecker();
 
     }
 
@@ -181,6 +191,32 @@ public final class DropCollectorPlugin extends JavaPlugin {
 
     public void log(Level level, String message, Exception exception) {
         this.getLogger().log(level, message, exception);
+    }
+
+    public void setupUpdateChecker() {
+        (updateChecker = new UpdateChecker(this)).checkUpdates();
+
+        this.getServer().getPluginManager().registerEvents(new Listener() {
+            @EventHandler
+            public void onJoin(PlayerJoinEvent event) {
+                Player player = event.getPlayer();
+
+                if (!player.hasPermission("dropcollector.notify")) return;
+
+                if (!updateChecker.isUpToDate()) {
+                    adventure.player(player).sendMessage(ChatUtils.format(
+                            "<gold>[CDropCollector] <yellow>An update was found!"
+                    ));
+                    adventure.player(player).sendMessage(ChatUtils.format(
+                            "<gold>[CDropCollector] <yellow>Update message:"
+                    ));
+                    adventure.player(player).sendMessage(ChatUtils.format(
+                            "<gold>[CDropCollector] <yellow><message>",
+                            Placeholder.parsed("message", updateChecker.getUpdateMessage())
+                    ));
+                }
+            }
+        }, this);
     }
 
     public void setupMetrics() {

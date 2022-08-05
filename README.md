@@ -1,5 +1,5 @@
 # CDropCollector
-WIP, not guaranteed to work for now.
+MCM/BBB page: https://builtbybit.com/resources/24708/
 
 # Contributing
 To build and contribute this project, you will need to create a directory called "libs" and add some plugin jars into it.

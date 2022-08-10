@@ -15,7 +15,7 @@ import java.net.URL;
 @Getter
 public class UpdateChecker {
 
-    private static final String URL = "https://raw.githubusercontent.com/CriusDevelopment/CDropCollector/master/version.txt";
+    private static final String URL = "https://raw.githubusercontent.com/CriusDevelopment/CDropCollector-Public/main/version";
 
     private final DropCollectorPlugin plugin;
 
@@ -26,6 +26,7 @@ public class UpdateChecker {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, ()-> {
             try {
                 HttpsURLConnection con = (HttpsURLConnection) new URL(URL).openConnection();
+                con.setUseCaches(false);
                 InputStreamReader reader = new InputStreamReader(con.getInputStream());
                 String[] split = (new BufferedReader(reader)).readLine().split(";");
                 String latestVersion = split[0];

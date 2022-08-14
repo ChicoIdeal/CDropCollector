@@ -15,7 +15,7 @@ import java.net.URL;
 @Getter
 public class UpdateChecker {
 
-    private static final String URL = "https://raw.githubusercontent.com/CriusDevelopment/CDropCollector-Public/main/version";
+    private static final String URL = "https://raw.githubusercontent.com/CriusDevelopment/CDropCollector/master/version";
 
     private final DropCollectorPlugin plugin;
 

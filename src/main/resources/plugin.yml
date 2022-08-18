@@ -13,6 +13,7 @@ softdepend:
   - GriefDefender
   - UltimateClaims
   - PlotSquared
+  - Lands
   - EconomyShopGUI
   - EconomyShopGUI-Premium
   - ShopGUIPlus

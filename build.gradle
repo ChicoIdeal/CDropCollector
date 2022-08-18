@@ -21,7 +21,7 @@ allprojects {
     }
 
     dependencies {
-        compileOnly 'org.spigotmc:spigot-api:1.19.2-R0.1-SNAPSHOT'
+        compileOnly 'org.spigotmc:spigot-api:1.19.1-R0.1-SNAPSHOT'
 
         compileOnly 'org.projectlombok:lombok:1.18.24'
         annotationProcessor 'org.projectlombok:lombok:1.18.24'
@@ -75,6 +75,7 @@ dependencies {
     compileOnly 'com.github.TechFortress:GriefPrevention:16.17.1'
     compileOnly 'com.songoda:skyblock:2.3.30'
     compileOnly 'world.bentobox:bentobox:1.16.2-SNAPSHOT' // 1.16.2 is newest version that supports java 8
+    compileOnly "com.github.angeschossen:LandsAPI:6.12.1"
 
     // stacker plugins
     compileOnly 'com.bgsoftware:WildStackerAPI:3.8.0'

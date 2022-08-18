@@ -37,11 +37,10 @@ public class PlotSquaredV3RegionManager implements RegionManager {
         if (plotArea == null) return false;
         Plot plot = plotArea.getPlot(location);
         if (plot == null) return false;
-        if (plot.isOwner(player.getUniqueId())) return true;
         if (plugin.getPluginConfig().getBoolean("Settings.allow-coops-to-manage")
                 && plot.getTrusted().contains(player.getUniqueId())) return true;
 
-        return plot.getTrusted().contains(player.getUniqueId());
+        return plot.isOwner(player.getUniqueId());
     }
 
     @Override

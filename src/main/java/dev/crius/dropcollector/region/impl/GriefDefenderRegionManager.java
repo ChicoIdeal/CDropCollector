@@ -44,7 +44,8 @@ public class GriefDefenderRegionManager implements RegionManager {
         if (claim == null || claim.isWilderness()) return false;
         if (claim.getOwnerUniqueId().equals(player.getUniqueId())) return true;
 
-        return claim.isUserTrusted(player.getUniqueId(), TrustTypes.MANAGER);
+        return claim.isUserTrusted(player.getUniqueId(), TrustTypes.MANAGER)
+                && plugin.getPluginConfig().getBoolean("Settings.allow-coops-to-manage");
     }
 
     @Override

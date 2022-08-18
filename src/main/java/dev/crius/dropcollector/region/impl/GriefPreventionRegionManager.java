@@ -32,7 +32,8 @@ public class GriefPreventionRegionManager implements RegionManager {
         if (claim == null) return false;
         if (claim.getOwnerID().equals(player.getUniqueId())) return true;
 
-        return claim.getPermission(player.getName()) == ClaimPermission.Build;
+        return claim.getPermission(player.getName()) == ClaimPermission.Build
+                && plugin.getPluginConfig().getBoolean("Settings.allow-coops-to-manage");
     }
 
     @Override

@@ -7,6 +7,7 @@ import dev.crius.dropcollector.database.impl.mongo.model.CollectorModel;
 import dev.crius.dropcollector.database.impl.yaml.YamlData;
 import dev.crius.dropcollector.entity.CEntity;
 import dev.crius.dropcollector.entity.item.CItem;
+import dev.crius.dropcollector.exception.CollectorException;
 import dev.crius.dropcollector.upgrade.Upgrade;
 import dev.crius.dropcollector.util.ChatUtils;
 import dev.crius.dropcollector.util.LocationUtils;
@@ -44,6 +45,7 @@ public class Collector {
         this.owner = owner;
         this.location = location;
         this.entity = entity;
+        if (this.entity == null) throw new CollectorException("Tried to load a collector that's entity does not exist anymore! Removing the collector.");
         this.holoLines = ChatUtils.colorLegacy(
                 DropCollectorPlugin.getInstance().getPluginConfig().getStringList("Messages.hologram-lines"),
                 new Placeholder("<display-name>", entity.getDisplayName())
@@ -64,6 +66,7 @@ public class Collector {
         this.owner = UUID.fromString(data.getString("owner", ""));
         this.id = UUID.fromString(data.getFile().getName().split("\\.")[0]);
         this.entity = DropCollectorPlugin.getInstance().getEntityManager().getEntity(data.getString("entity"));
+        if (this.entity == null) throw new CollectorException("Tried to load a collector that's entity does not exist anymore! Removing the collector.");
         this.level = DropCollectorPlugin.getInstance().getUpgradeManager().getUpgrade(data.getInt("level"));
         this.holoLines = ChatUtils.colorLegacy(
                 DropCollectorPlugin.getInstance().getPluginConfig().getStringList("Messages.hologram-lines"),
@@ -89,6 +92,7 @@ public class Collector {
         this.owner = UUID.fromString(resultSet.getString("owner"));
         this.id = UUID.fromString(resultSet.getString("uuid"));
         this.entity = DropCollectorPlugin.getInstance().getEntityManager().getEntity(resultSet.getString("entity"));
+        if (this.entity == null) throw new CollectorException("Tried to load a collector that's entity does not exist anymore! Removing the collector.");
         this.level = DropCollectorPlugin.getInstance().getUpgradeManager().getUpgrade(resultSet.getInt("level"));
         this.holoLines = ChatUtils.colorLegacy(
                 DropCollectorPlugin.getInstance().getPluginConfig().getStringList("Messages.hologram-lines"),
@@ -123,6 +127,7 @@ public class Collector {
         this.owner = model.owner;
         this.id = model.id;
         this.entity = DropCollectorPlugin.getInstance().getEntityManager().getEntity(model.entity);
+        if (this.entity == null) throw new CollectorException("Tried to load a collector that's entity does not exist anymore! Removing the collector.");
         this.level = DropCollectorPlugin.getInstance().getUpgradeManager().getUpgrade(model.level);
         this.holoLines = ChatUtils.colorLegacy(
                 DropCollectorPlugin.getInstance().getPluginConfig().getStringList("Messages.hologram-lines"),

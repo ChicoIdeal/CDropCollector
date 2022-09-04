@@ -5,6 +5,7 @@ import dev.crius.dropcollector.collector.CollectedItem;
 import dev.crius.dropcollector.collector.Collector;
 import dev.crius.dropcollector.collector.log.ItemLog;
 import dev.crius.dropcollector.database.Database;
+import dev.crius.dropcollector.exception.CollectorException;
 import dev.crius.dropcollector.util.LocationUtils;
 import dev.crius.dropcollector.xseries.XMaterial;
 import lombok.RequiredArgsConstructor;
@@ -77,8 +78,13 @@ public class YamlDatabase implements Database {
         for (File file : files) {
             if (file.isDirectory() || !file.getName().endsWith(".yml")) continue;
 
-            Collector collector = new Collector(file);
-            collectors.add(collector);
+            try {
+                Collector collector = new Collector(file);
+                collectors.add(collector);
+            } catch (CollectorException exception) {
+                plugin.log(exception.getMessage(), Level.WARNING);
+                file.delete();
+            }
         }
 
         return collectors;

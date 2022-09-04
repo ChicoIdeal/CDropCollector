@@ -9,6 +9,7 @@ import dev.crius.dropcollector.DropCollectorPlugin;
 import dev.crius.dropcollector.collector.Collector;
 import dev.crius.dropcollector.database.Database;
 import dev.crius.dropcollector.database.impl.mongo.model.CollectorModel;
+import dev.crius.dropcollector.exception.CollectorException;
 import lombok.RequiredArgsConstructor;
 import org.bson.UuidRepresentation;
 import org.bson.codecs.configuration.CodecRegistries;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -79,8 +81,13 @@ public class MongoDatabase implements Database {
         List<Collector> collectors = new ArrayList<>();
 
         for (CollectorModel model : collection.find(Filters.empty())) {
-            Collector collector = new Collector(model);
-            collectors.add(collector);
+            try {
+                Collector collector = new Collector(model);
+                collectors.add(collector);
+            } catch (CollectorException exception) {
+                plugin.log(exception.getMessage(), Level.WARNING);
+                remove(model.id);
+            }
         }
 
         return collectors;
@@ -91,8 +98,13 @@ public class MongoDatabase implements Database {
         List<Collector> collectors = new ArrayList<>();
 
         for (CollectorModel model : collection.find(Filters.eq("_id", uuid))) {
-            Collector collector = new Collector(model);
-            collectors.add(collector);
+            try {
+                Collector collector = new Collector(model);
+                collectors.add(collector);
+            } catch (CollectorException exception) {
+                plugin.log(exception.getMessage(), Level.WARNING);
+                remove(model.id);
+            }
         }
 
         return collectors;
@@ -102,6 +114,11 @@ public class MongoDatabase implements Database {
     public void remove(Collector collector) {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () ->
                 collection.deleteOne(Filters.eq("_id", collector.getId())));
+    }
+
+    public void remove(UUID id) {
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () ->
+                collection.deleteOne(Filters.eq("_id", id)));
     }
 
     @Override

@@ -32,6 +32,11 @@ public class CollectorGui {
     // not a good solution but better than a yellow color everywhere, it can break the gui if configuration is wrong
     @SuppressWarnings("ConstantConditions")
     public static void open(Player player, Collector collector) {
+        if (!Bukkit.isPrimaryThread()) {
+            Bukkit.getScheduler().runTask(PLUGIN, () -> open(player, collector));
+            return;
+        }
+
         PaginatedGui gui = Gui.paginated().title(
                 ChatUtils.format(PLUGIN.getPluginConfig().getString("Gui.title"),
                         Placeholder.unparsed("entity-displayname", collector.getEntity().getDisplayName())))
@@ -55,7 +60,7 @@ public class CollectorGui {
             gui.setItem(slot, ItemBuilder.from(
                     XMaterial.matchXMaterial(PLUGIN.getPluginConfig()
                             .getString("Gui.fillerMaterial")).orElse(null).parseItem()
-            ).name(Component.text(" ")).asGuiItem());
+            ).name(Component.space()).asGuiItem());
         }
 
         GuiItem previous = ItemBuilder.from(

@@ -26,11 +26,9 @@ public class ItemListener implements Listener {
 
     private final DropCollectorPlugin plugin;
 
-    // we are using LOW priority to not conflict with other plugins
-    // using the lowest priority may cause conflicts
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onItemSpawn(ItemSpawnEvent event) {
-        if (event.getEntity().getPickupDelay() == 40
+        if (event.getEntity().getPickupDelay() >= 39
                 && !plugin.getPluginConfig().getBoolean("Settings.collect-player-drops")) return;
 
         if (!plugin.getPluginConfig().getStringList("Settings.enabled-worlds")
@@ -99,7 +97,6 @@ public class ItemListener implements Listener {
         }
 
         collector.add(material, amountToAdd);
-
 
     }
 

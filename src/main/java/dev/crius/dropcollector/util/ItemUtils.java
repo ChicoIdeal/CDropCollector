@@ -8,7 +8,7 @@ public class ItemUtils {
     public static String getKey(Material material) {
         if (!XMaterial.supports(13)) return null;
 
-        return (material.isItem() ? "item." : "block.") + "minecraft." + material.getKey().getKey();
+        return (!material.isBlock() ? "item." : "block.") + "minecraft." + material.getKey().getKey();
     }
 
 }

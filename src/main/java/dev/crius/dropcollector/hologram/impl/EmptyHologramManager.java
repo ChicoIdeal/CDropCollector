@@ -47,6 +47,7 @@ public class EmptyHologramManager extends HologramManager {
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
                 for (Collector collector : plugin.getCollectorManager().getCollectors()) {
+                    if (!collector.getLocation().getWorld().equals(event.getClickedBlock().getWorld())) continue;
                     if (!player.hasPermission(RegionManager.BYPASS_PERMISSION) &&
                             !plugin.getRegionManager().canManage(player, collector)) return;
                     if (collector.getLocation().distance(event.getClickedBlock().getLocation()) > 2) continue;
@@ -58,6 +59,7 @@ public class EmptyHologramManager extends HologramManager {
             if (expiringSet.contains(player.getUniqueId())) {
                 Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
                     for (Collector collector : plugin.getCollectorManager().getCollectors()) {
+                        if (!collector.getLocation().getWorld().equals(event.getClickedBlock().getWorld())) continue;
                         if (!player.hasPermission(RegionManager.BYPASS_PERMISSION) &&
                                 !plugin.getRegionManager().canManage(player, collector)) return;
                         if (collector.getLocation().distance(event.getClickedBlock().getLocation()) > 2) continue;

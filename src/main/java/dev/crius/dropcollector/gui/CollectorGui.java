@@ -265,8 +265,6 @@ public class CollectorGui {
                         return;
                     }
 
-                    collectedItem.setAmount(collectedItem.getAmount() - amount);
-
                     if (event.isLeftClick()) {
                         if (player.getInventory().firstEmpty() == -1) {
                             PLUGIN.getAdventure().player(player).sendMessage(ChatUtils.format(
@@ -309,7 +307,9 @@ public class CollectorGui {
                                         Component.text(collectedItem.getItem().getMaterial().toString())
                                 )
                         ));
-                    }
+                    } else return;
+
+                    collectedItem.setAmount(collectedItem.getAmount() - amount);
 
                     open(player, collector);
                 }));

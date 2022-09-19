@@ -536,9 +536,11 @@ public final class DropCollectorPlugin extends JavaPlugin {
                 break;
         }
 
-        log("Loading collectors...");
-        pluginDatabase.onEnable();
-        log("Collectors loaded.");
+        Bukkit.getScheduler().runTask(this, () -> {
+            log("Loading collectors...");
+            pluginDatabase.onEnable();
+            log("Collectors loaded.");
+        });
     }
 
 }

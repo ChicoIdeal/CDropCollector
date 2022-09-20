@@ -37,6 +37,7 @@ public class CropListener implements Listener {
             }
 
             if (!allowed) return;
+            if (!(state.getBlockData() instanceof Ageable)) return;
 
             Ageable ageable = (Ageable) state.getBlockData();
             // whenever a cactus grows, its age is 0 and not the maximum age.

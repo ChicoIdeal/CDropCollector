@@ -2,13 +2,21 @@ package dev.crius.dropcollector.listener;
 
 import dev.crius.dropcollector.DropCollectorPlugin;
 import lombok.RequiredArgsConstructor;
+import org.bukkit.Material;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Mob;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.inventory.ItemStack;
+
+import java.security.SecureRandom;
+import java.util.Random;
 
 @RequiredArgsConstructor
 public class EntityListener implements Listener {
+
+    private static final Random RANDOM = new SecureRandom();
 
     private final DropCollectorPlugin plugin;
 
@@ -32,7 +40,12 @@ public class EntityListener implements Listener {
 
         if (event.getEntity() instanceof Mob) {
             event.getEntity().damage(1000);
-            event.setCancelled(true);
+
+            if (event.getEntityType() == EntityType.BLAZE) {
+                if (RANDOM.nextInt(100) >= 50)
+                    event.getEntity().getWorld().dropItemNaturally(event.getLocation(), new ItemStack(Material.BLAZE_ROD));
+            }
+
         }
     }
 

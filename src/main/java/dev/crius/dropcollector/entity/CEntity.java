@@ -24,11 +24,11 @@ public class CEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CEntity entity = (CEntity) o;
-        return Objects.equal(name, entity.name) && Objects.equal(displayName, entity.displayName) && Objects.equal(materials, entity.materials) && Objects.equal(head, entity.head) && Objects.equal(texture, entity.texture);
+        return Objects.equal(name, entity.name) && Objects.equal(displayName, entity.displayName) && Objects.equal(materials, entity.materials) && Objects.equal(texture, entity.texture);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(name, displayName, materials, head, texture);
+        return Objects.hashCode(name, displayName, materials, texture);
     }
 }

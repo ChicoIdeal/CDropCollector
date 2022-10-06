@@ -4,7 +4,6 @@ import dev.crius.dropcollector.DropCollectorPlugin;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Mob;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
@@ -38,15 +37,13 @@ public class EntityListener implements Listener {
 
         if (!allowed) return;
 
-        if (event.getEntity() instanceof Mob) {
-            event.getEntity().damage(1000);
+        event.getEntity().damage(1000);
 
-            if (event.getEntityType() == EntityType.BLAZE) {
-                if (RANDOM.nextInt(100) >= 50)
-                    event.getEntity().getWorld().dropItemNaturally(event.getLocation(), new ItemStack(Material.BLAZE_ROD));
-            }
-
+        if (event.getEntityType() == EntityType.BLAZE) {
+            if (RANDOM.nextInt(100) >= 50)
+                event.getEntity().getWorld().dropItemNaturally(event.getLocation(), new ItemStack(Material.BLAZE_ROD));
         }
+
     }
 
 }

@@ -16,6 +16,9 @@ import org.bukkit.material.Crops;
 
 import java.util.Objects;
 
+/**
+ * Everything in this class designed to be used in legacy (-1.13) versions and should never be used in newer versions.
+ */
 @SuppressWarnings("deprecation")
 @RequiredArgsConstructor
 public class CropListenerLegacy implements Listener {

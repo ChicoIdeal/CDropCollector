@@ -39,7 +39,7 @@ public class CollectorManager {
     public void breakCollector(Player player, Collector collector) {
         removeCollector(collector);
 
-        ItemStack item = createCreator(collector.getEntity(), player.getUniqueId());
+        ItemStack item = createCreator(collector, player.getUniqueId());
         player.getInventory().addItem(item);
     }
 
@@ -88,6 +88,36 @@ public class CollectorManager {
         nbtItem.setString("dropcollector:type", entity.getName());
         nbtItem.setString("dropcollector:owner", owner.toString());
         nbtItem.setString("dropcollector:id", UUID.randomUUID().toString());
+
+        return nbtItem.getItem();
+    }
+
+    /**
+     * Creates a collector creator with the specified entity.
+     *
+     * @param collector Collector to create the details
+     * @param owner Owner of the creator
+     * @return Creator Item
+     */
+    public ItemStack createCreator(Collector collector, UUID owner) {
+        ItemStack item = ItemBuilder.skull(collector.getEntity().getHead().clone())
+                .lore(
+                        ChatUtils.format(plugin.getPluginConfig().getStringList("Creator-Item.lore"),
+                                Placeholder.unparsed("entity-displayname", collector.getEntity().getDisplayName()))
+                )
+                .name(
+                        ChatUtils.format(plugin.getPluginConfig().getString("Creator-Item.displayName"),
+                                Placeholder.unparsed("entity-displayname", collector.getEntity().getDisplayName()))
+                )
+                .glow(plugin.getPluginConfig().getBoolean("Creator-Item.glow"))
+                .build();
+
+        NBTItem nbtItem = new NBTItem(item);
+        nbtItem.setBoolean("dropcollector:creator", true);
+        nbtItem.setString("dropcollector:type", collector.getEntity().getName());
+        nbtItem.setString("dropcollector:owner", owner.toString());
+        nbtItem.setString("dropcollector:id", UUID.randomUUID().toString());
+        nbtItem.setInteger("dropcollector:level", collector.getLevel().getPlace());
 
         return nbtItem.getItem();
     }

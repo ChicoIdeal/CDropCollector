@@ -7,6 +7,7 @@ import dev.crius.dropcollector.collector.Collector;
 import dev.crius.dropcollector.entity.CEntity;
 import dev.crius.dropcollector.hologram.impl.EmptyHologramManager;
 import dev.crius.dropcollector.region.RegionManager;
+import dev.crius.dropcollector.upgrade.Upgrade;
 import dev.crius.dropcollector.util.ChatUtils;
 import dev.crius.dropcollector.xseries.XMaterial;
 import lombok.RequiredArgsConstructor;
@@ -106,6 +107,13 @@ public class InteractListener implements Listener {
                 ChatUtils.format(plugin.getPluginConfig().getString("Messages.placed-a-collector"))
         );
 
+        if (nbtItem.hasKey("dropcollector:level")) {
+            int level = nbtItem.getInteger("dropcollector:level");
+            Upgrade upgrade = plugin.getUpgradeManager().getUpgrade(level);
+            if (upgrade != null)
+                collector.setLevel(plugin.getUpgradeManager().getUpgrade(level));
+        }
+
     }
 
     private void removeCreator(Player target, String id) {
@@ -127,6 +135,5 @@ public class InteractListener implements Listener {
             }
         }
     }
-
 
 }

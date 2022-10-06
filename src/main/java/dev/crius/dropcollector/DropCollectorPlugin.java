@@ -21,10 +21,7 @@ import dev.crius.dropcollector.hologram.HologramManager;
 import dev.crius.dropcollector.hologram.impl.DecentHologramsManager;
 import dev.crius.dropcollector.hologram.impl.EmptyHologramManager;
 import dev.crius.dropcollector.hologram.impl.HolographicDisplaysManager;
-import dev.crius.dropcollector.listener.CropListener;
-import dev.crius.dropcollector.listener.EntityListener;
-import dev.crius.dropcollector.listener.InteractListener;
-import dev.crius.dropcollector.listener.ItemListener;
+import dev.crius.dropcollector.listener.*;
 import dev.crius.dropcollector.region.RegionManager;
 import dev.crius.dropcollector.region.impl.*;
 import dev.crius.dropcollector.shop.ShopManager;
@@ -35,6 +32,7 @@ import dev.crius.dropcollector.task.AutoSaveTask;
 import dev.crius.dropcollector.upgrade.UpgradeManager;
 import dev.crius.dropcollector.util.ChatUtils;
 import dev.crius.dropcollector.util.UpdateChecker;
+import dev.crius.dropcollector.xseries.XMaterial;
 import dev.triumphteam.cmd.bukkit.BukkitCommandManager;
 import dev.triumphteam.cmd.bukkit.message.BukkitMessageKey;
 import dev.triumphteam.cmd.core.exceptions.CommandRegistrationException;
@@ -273,8 +271,12 @@ public final class DropCollectorPlugin extends JavaPlugin {
 
         pluginManager.registerEvents(new InteractListener(this), this);
         pluginManager.registerEvents(new ItemListener(this), this);
-        pluginManager.registerEvents(new CropListener(this), this);
         pluginManager.registerEvents(new EntityListener(this), this);
+
+        if (XMaterial.supports(13))
+            pluginManager.registerEvents(new CropListener(this), this);
+        else
+            pluginManager.registerEvents(new CropListenerLegacy(this), this);
     }
 
     public void setupUpgradeManager() {

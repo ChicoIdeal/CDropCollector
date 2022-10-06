@@ -7,7 +7,6 @@ Settings:
 
   auto-sell: true # sells all the items in the storage whenever it is full
 
-  # currently only for +1.13
   auto-harvest: true # harvests fully grown crops
   auto-harvest-require-collector: true # should we check for collectors in the region? If you are having performance issues, disable this.
   # Material names can be found in:
